@@ -229,7 +229,7 @@ function getNearestAircraft (emit: (...params: string[]) => void, location: Loca
                         default:
                             direction = "North";
                     }
-                    return `${!aircraft[1] ? "Aircraft with no callsign" : aircraft[1].trim()} hailing from ${articlizeCountry(aircraft[2])} is ${distance.toFixed(1)} miles away to the ${direction} and traveling at ${aircraft[7] === null ? "unknown altitude" : (Math.floor(Math.round(aircraft[7] * 3.2808399 / 100) * 100).toString() + " feet")} at ${aircraft[9] === null ? "unknown speed" : (Math.round(aircraft[9] * 2.23693629) + " miles per hour")}`;
+                    return `<say-as interpret-as="spell-out">${!aircraft[1] ? "Aircraft with no callsign" : aircraft[1].trim()}</say-as> hailing from ${articlizeCountry(aircraft[2])} is ${distance.toFixed(1)} miles away to the ${direction} and traveling at ${aircraft[7] === null ? "unknown altitude" : (Math.floor(Math.round(aircraft[7] * 3.2808399 / 100) * 100).toString() + " feet")} at ${aircraft[9] === null ? "unknown speed" : (Math.round(aircraft[9] * 2.23693629) + " miles per hour")}`;
                 });
                 // Alexa doesn't know to pronounce this as a state
                 if (location.state === "OK")
