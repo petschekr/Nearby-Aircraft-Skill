@@ -179,57 +179,13 @@ function getNearestAircraft (emit: (...params: string[]) => void, location: Loca
                         { latitude: location.latitude, longitude: location.longitude },
                         { latitude: aircraft[6], longitude: aircraft[5] }
                     );
-                    let direction: string;
-                    switch(Math.round(bearing / 22.5)) {
-                        case 1:
-                            direction = "North North East";
-                            break;
-                        case 2:
-                            direction = "North East";
-                            break;
-                        case 3:
-                            direction = "East North East"
-                            break;
-                        case 4:
-                            direction = "East";
-                            break;
-                        case 5:
-                            direction = "East South East";
-                            break;
-                        case 6:
-                            direction = "South East";
-                            break;
-                        case 7:
-                            direction = "South South East";
-                            break;
-                        case 8:
-                            direction = "South";
-                            break;
-                        case 9:
-                            direction = "South South West";
-                            break;
-                        case 10:
-                            direction = "South West";
-                            break;
-                        case 11:
-                            direction = "West South West";
-                            break;
-                        case 12:
-                            direction = "West";
-                            break;
-                        case 13:
-                            direction = "West North West";
-                            break;
-                        case 14:
-                            direction = "North West";
-                            break;
-                        case 15:
-                            direction = "North North West";
-                            break;
-                        default:
-                            direction = "North";
+                    let direction: string = getBearingDirection(bearing);
+                    console.info(`Aircraft callsign is "${aircraft[1]}"`);
+                    let callsign: string = "Aircraft with no callsign";
+                    if (aircraft[1]) {
+                        callsign = `<say-as interpret-as="spell-out">${aircraft[1].trim()}</say-as>`;
                     }
-                    return `<say-as interpret-as="spell-out">${!aircraft[1] ? "Aircraft with no callsign" : aircraft[1].trim()}</say-as> hailing from ${articlizeCountry(aircraft[2])} is ${distance.toFixed(1)} miles away to the ${direction} and traveling at ${aircraft[7] === null ? "unknown altitude" : (Math.floor(Math.round(aircraft[7] * 3.2808399 / 100) * 100).toString() + " feet")} at ${aircraft[9] === null ? "unknown speed" : (Math.round(aircraft[9] * 2.23693629) + " miles per hour")}`;
+                    return `${callsign} hailing from ${articlizeCountry(aircraft[2])} is ${distance.toFixed(1)} miles away to the ${direction} and traveling ${!aircraft[10] ? "in an unknown direction" : getBearingDirection(aircraft[10])} at ${aircraft[7] === null ? "unknown altitude" : (Math.floor(Math.round(aircraft[7] * 3.2808399 / 100) * 100).toString() + " feet")} at ${aircraft[9] === null ? "unknown speed" : (Math.round(aircraft[9] * 2.23693629) + " miles per hour")}`;
                 });
                 // Alexa doesn't know to pronounce this as a state
                 if (location.state === "OK")
@@ -264,6 +220,42 @@ function getNearestAircraft (emit: (...params: string[]) => void, location: Loca
             return "the " + country;
         else
             return country;
+    }
+    function getBearingDirection (bearing: number): string {
+        switch(Math.round(bearing / 22.5)) {
+            case 1:
+                return "North North East";
+            case 2:
+                return "North East";
+            case 3:
+                return "East North East"
+            case 4:
+                return "East";
+            case 5:
+                return "East South East";
+            case 6:
+                return "South East";
+            case 7:
+                return "South South East";
+            case 8:
+                return "South";
+            case 9:
+                return "South South West";
+            case 10:
+                return "South West";
+            case 11:
+                return "West South West";
+            case 12:
+                return "West";
+            case 13:
+                return "West North West";
+            case 14:
+                return "North West";
+            case 15:
+                return "North North West";
+            default:
+                return "North";
+        }
     }
 }
 
