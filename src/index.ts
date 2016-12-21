@@ -180,7 +180,6 @@ function getNearestAircraft (emit: (...params: string[]) => void, location: Loca
                         { latitude: aircraft[6], longitude: aircraft[5] }
                     );
                     let direction: string = getBearingDirection(bearing);
-                    console.info(`Aircraft callsign is "${aircraft[1]}"`);
                     let callsign: string = "Aircraft with no callsign";
                     if (aircraft[1]) {
                         callsign = `<say-as interpret-as="spell-out">${aircraft[1].trim()}</say-as>`;
