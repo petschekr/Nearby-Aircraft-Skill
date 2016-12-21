@@ -1,0 +1,28 @@
+{
+  "name": "nearby-aircraft",
+  "version": "1.0.0",
+  "description": "Ask Amazon Alexa for nearby aircraft flying by you right now",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petschekr/Nearby-Aircraft-Skill.git"
+  },
+  "author": "Ryan Petschek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/petschekr/Nearby-Aircraft-Skill/issues"
+  },
+  "homepage": "https://github.com/petschekr/Nearby-Aircraft-Skill#readme",
+  "dependencies": {
+    "alexa-sdk": "^1.0.6",
+    "request": "^2.79.0"
+  },
+  "devDependencies": {
+    "@types/alexa-sdk": "^1.0.4",
+    "@types/node": "^6.0.52",
+    "@types/request": "0.0.36"
+  }
+}

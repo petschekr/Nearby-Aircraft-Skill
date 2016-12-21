@@ -1,0 +1,42 @@
+{
+  "intents": [
+    {
+      "intent": "NearbyAircraft",
+      "slots": [
+        {
+          "name": "ZipCode",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "City",
+          "type": "AMAZON.US_CITY"
+        }
+      ]
+    },
+    {
+      "intent": "SetLocation",
+      "slots": [
+        {
+          "name": "ZipCode",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "City",
+          "type": "AMAZON.US_CITY"
+        }
+      ]
+    },
+    {
+      "intent": "AMAZON.HelpIntent",
+      "slots": []
+    },
+    {
+      "intent": "AMAZON.CancelIntent",
+      "slots": []
+    },
+    {
+      "intent": "AMAZON.StopIntent",
+      "slots": []
+    }
+  ]
+}
