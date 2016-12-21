@@ -151,7 +151,7 @@ function getNearestAircraft (emit: (...params: string[]) => void, location: Loca
                 let allAircraft: any[] = JSON.parse(body).states;
                 // Find the three nearest aircraft with callsigns in a roughly 80km radius
                 let sentences: string[] = allAircraft.filter(function (aircraft) {
-                    if (!aircraft[6] || !aircraft[5])
+                    if (!aircraft[6] || !aircraft[5] || aircraft[8] === true)
                         return false;
                     return geolib.getDistanceSimple(
                         { latitude: aircraft[6], longitude: aircraft[5] },
