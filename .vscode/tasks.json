@@ -2,9 +2,22 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "0.1.0",
-    "command": "tsc",
+    "command": "C:\\Windows\\System32\\bash.exe",
     "isShellCommand": true,
-    "args": ["-p", "."],
-    "showOutput": "silent",
-    "problemMatcher": "$tsc"
+    "args": ["-c"],
+    "tasks": [
+        {
+            "isBuildCommand": true,
+            "taskName": "tsc",
+            "args": ["-p", "."],
+            "showOutput": "silent",
+            "problemMatcher": "$tsc"
+        },
+        {
+            "isBuildCommand": true,
+            "taskName": "zip",
+            "args": ["-r", "-q", "aircraft.zip", "src/"],
+            "showOutput": "always"
+        }
+    ]
 }
