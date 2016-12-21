@@ -29,19 +29,19 @@ const states = {
 
 const defaultSessionHanders = {
     "LaunchRequest": function () {
-        //this.emit("AMAZON.HelpIntent");
-        this.emit("Hello");
+        this.handler.state = states.GETLOCATION;
+        this.emit(":ask", "What zip code or U.S. city and state would you like nearby aircraft for?", "For what zip code or U.S. city and state?");
     },
     "NearbyAircraft": function () {
         const slots = this.event.request.intent.slots;
         let zipCode: string = slots.ZipCode.value;
         let cityName: string = slots.City.value;
         let stateName: string = slots.State.value;
-        if (zipCode !== null) {
+        if (zipCode) {
             let foundCoords = usZips[zipCode];
             let zipCodeDetails = zipcodes.lookup(zipCode);
             if (foundCoords === undefined) {
-                this.emit("Unhandled");
+                this.emit(":ask", "Invalid zip code. Please try again.", "Please try again");
             }
             else {
                 let location: Location = {
@@ -53,10 +53,10 @@ const defaultSessionHanders = {
                 getNearestAircraft(this.emit, location);
             }
         }
-        else if (cityName !== null && stateName !== null) {
+        else if (cityName && stateName) {
             let cityDetails = zipcodes.lookupByName(cityName, stateName)[0];
             if (cityDetails === undefined) {
-                this.emit("Unhandled");
+                this.emit(":ask", "Invalid city and state. Please try again.", "Please try again");
             }
             else {
                 let location: Location = {
@@ -93,11 +93,11 @@ const getLocationHandlers = Alexa.CreateStateHandler(states.GETLOCATION, {
         let zipCode: string = slots.ZipCode.value;
         let cityName: string = slots.City.value;
         let stateName: string = slots.State.value;
-        if (zipCode !== null) {
+        if (zipCode) {
             let foundCoords = usZips[zipCode];
             let zipCodeDetails = zipcodes.lookup(zipCode);
             if (foundCoords === undefined) {
-                this.emit("Unhandled");
+                this.emit(":ask", "Invalid zip code. Please try again.", "Please try again");
             }
             else {
                 let location: Location = {
@@ -106,14 +106,14 @@ const getLocationHandlers = Alexa.CreateStateHandler(states.GETLOCATION, {
                     city: zipCodeDetails.city,
                     state: zipCodeDetails.state
                 };
-                this.handler.state = "";
                 getNearestAircraft(this.emit, location);
+                this.handler.state = "";
             }
         }
-        else if (cityName !== null && stateName !== null) {
+        else if (cityName && stateName) {
             let cityDetails = zipcodes.lookupByName(cityName, stateName)[0];
             if (cityDetails === undefined) {
-                this.emit("Unhandled");
+                this.emit(":ask", "Invalid city and state. Please try again.", "Please try again");
             }
             else {
                 let location: Location = {
@@ -122,8 +122,8 @@ const getLocationHandlers = Alexa.CreateStateHandler(states.GETLOCATION, {
                     city: cityDetails.city,
                     state: cityDetails.state
                 };
-                this.handler.state = "";
                 getNearestAircraft(this.emit, location);
+                this.handler.state = "";
             }
         }
         else {
@@ -229,7 +229,7 @@ function getNearestAircraft (emit: (...params: string[]) => void, location: Loca
                         default:
                             direction = "North";
                     }
-                    return `${aircraft[1] === null ? "Aircraft with no callsign" : aircraft[1].trim()} hailing from ${articlizeCountry(aircraft[2])} is ${distance.toFixed(1)} miles away to the ${direction} and traveling at ${aircraft[7] === null ? "unknown altitude" : (Math.floor(Math.round(aircraft[7] * 3.2808399 / 100) * 100).toString() + " feet")} at ${aircraft[9] === null ? "unknown speed" : (Math.round(aircraft[9] * 2.23693629) + " miles per hour")}`;
+                    return `${!aircraft[1] ? "Aircraft with no callsign" : aircraft[1].trim()} hailing from ${articlizeCountry(aircraft[2])} is ${distance.toFixed(1)} miles away to the ${direction} and traveling at ${aircraft[7] === null ? "unknown altitude" : (Math.floor(Math.round(aircraft[7] * 3.2808399 / 100) * 100).toString() + " feet")} at ${aircraft[9] === null ? "unknown speed" : (Math.round(aircraft[9] * 2.23693629) + " miles per hour")}`;
                 });
                 // Alexa doesn't know to pronounce this as a state
                 if (location.state === "OK")
