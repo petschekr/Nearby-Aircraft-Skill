@@ -10,11 +10,15 @@
         {
           "name": "City",
           "type": "AMAZON.US_CITY"
+        },
+        {
+          "name": "State",
+          "type": "AMAZON.US_STATE"
         }
       ]
     },
     {
-      "intent": "SetLocation",
+      "intent": "Location",
       "slots": [
         {
           "name": "ZipCode",
@@ -23,6 +27,10 @@
         {
           "name": "City",
           "type": "AMAZON.US_CITY"
+        },
+        {
+          "name": "State",
+          "type": "AMAZON.US_STATE"
         }
       ]
     },

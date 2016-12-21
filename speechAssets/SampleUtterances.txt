@@ -1,25 +1,30 @@
-NearbyAircaft
-NearbyAircaft nearby aircraft
-NearbyAircaft nearby flights
-NearbyAircaft nearby planes
-NearbyAircaft aircraft
-NearbyAircaft flights
-NearbyAircaft planes
-NearbyAircaft nearby aircraft at {ZipCode}
-NearbyAircaft nearby flights at {ZipCode}
-NearbyAircaft nearby planes at {ZipCode}
-NearbyAircaft aircraft at {ZipCode}
-NearbyAircaft flights at {ZipCode}
-NearbyAircaft planes at {ZipCode}
-NearbyAircaft aircraft near {ZipCode}
-NearbyAircaft flights near {ZipCode}
-NearbyAircaft planes near {ZipCode}
-NearbyAircaft nearby aircraft at {City}
-NearbyAircaft nearby flights at {City}
-NearbyAircaft nearby planes at {City}
-NearbyAircaft aircraft at {City}
-NearbyAircaft flights at {City}
-NearbyAircaft planes at {City}
-NearbyAircaft aircraft near {City}
-NearbyAircaft flights near {City}
-NearbyAircaft planes near {City}
+NearbyAircraft nearby
+NearbyAircraft nearby aircraft
+NearbyAircraft nearby flights
+NearbyAircraft nearby planes
+NearbyAircraft aircraft
+NearbyAircraft flights
+NearbyAircraft planes
+NearbyAircraft nearby aircraft at {ZipCode}
+NearbyAircraft nearby flights at {ZipCode}
+NearbyAircraft nearby planes at {ZipCode}
+NearbyAircraft aircraft at {ZipCode}
+NearbyAircraft flights at {ZipCode}
+NearbyAircraft planes at {ZipCode}
+NearbyAircraft aircraft near {ZipCode}
+NearbyAircraft flights near {ZipCode}
+NearbyAircraft planes near {ZipCode}
+NearbyAircraft nearby aircraft at {City} {State}
+NearbyAircraft nearby flights at {City} {State}
+NearbyAircraft nearby planes at {City} {State}
+NearbyAircraft aircraft at {City} {State}
+NearbyAircraft flights at {City} {State}
+NearbyAircraft planes at {City} {State}
+NearbyAircraft aircraft near {City} {State}
+NearbyAircraft flights near {City} {State}
+NearbyAircraft planes near {City} {State}
+
+Location near {ZipCode}
+Location near {City} {State}
+Location {ZipCode}
+Location {City} {State}

@@ -1,2 +1,4 @@
 tsc -p src/
-zip -r -q aircraft.zip src/
+cd src/
+zip -r -q aircraft.zip *
+mv aircraft.zip ../ 
