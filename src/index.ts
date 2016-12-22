@@ -27,6 +27,50 @@ const states = {
     GETLOCATION: "_GETLOCATION"
 };
 
+function mainAircraftHandler (zipCode: string | null, cityName: string | null, stateName: string | null, shouldFollowUp: boolean = false) {
+    if (zipCode) {
+        let foundCoords = usZips[zipCode];
+        let zipCodeDetails = zipcodes.lookup(zipCode);
+        if (foundCoords === undefined) {
+            this.emit(":ask", "Invalid zip code. Please try again.", "Please try again");
+        }
+        else {
+            let location: Location = {
+                latitude: foundCoords.lat,
+                longitude: foundCoords.lng,
+                city: zipCodeDetails.city,
+                state: zipCodeDetails.state
+            };
+            getNearestAircraft(this.emit, location);
+        }
+    }
+    else if (cityName && stateName) {
+        let cityDetails = zipcodes.lookupByName(cityName, stateName)[0];
+        if (cityDetails === undefined) {
+            this.emit(":ask", "Invalid city and state. Please try again.", "Please try again");
+        }
+        else {
+            let location: Location = {
+                latitude: cityDetails.latitude,
+                longitude: cityDetails.longitude,
+                city: cityDetails.city,
+                state: cityDetails.state
+            };
+            getNearestAircraft(this.emit, location);
+        }
+    }
+    else {
+        if (shouldFollowUp) {
+            // Follow up with a request for a location
+            this.handler.state = states.GETLOCATION;
+            this.emit(":ask", "OK, what zip code or U.S. city and state would you like nearby aircraft for?", "For what zip code or U.S. city and state?");
+        }
+        else {
+            this.emit("Unhandled");
+        }
+    }
+}
+
 const defaultSessionHanders = {
     "LaunchRequest": function () {
         this.handler.state = states.GETLOCATION;
@@ -37,42 +81,14 @@ const defaultSessionHanders = {
         let zipCode: string = slots.ZipCode.value;
         let cityName: string = slots.City.value;
         let stateName: string = slots.State.value;
-        if (zipCode) {
-            let foundCoords = usZips[zipCode];
-            let zipCodeDetails = zipcodes.lookup(zipCode);
-            if (foundCoords === undefined) {
-                this.emit(":ask", "Invalid zip code. Please try again.", "Please try again");
-            }
-            else {
-                let location: Location = {
-                    latitude: foundCoords.lat,
-                    longitude: foundCoords.lng,
-                    city: zipCodeDetails.city,
-                    state: zipCodeDetails.state
-                };
-                getNearestAircraft(this.emit, location);
-            }
-        }
-        else if (cityName && stateName) {
-            let cityDetails = zipcodes.lookupByName(cityName, stateName)[0];
-            if (cityDetails === undefined) {
-                this.emit(":ask", "Invalid city and state. Please try again.", "Please try again");
-            }
-            else {
-                let location: Location = {
-                    latitude: cityDetails.latitude,
-                    longitude: cityDetails.longitude,
-                    city: cityDetails.city,
-                    state: cityDetails.state
-                };
-                getNearestAircraft(this.emit, location);
-            }
-        }
-        else {
-            // Follow up with a request for a location
-            this.handler.state = states.GETLOCATION;
-            this.emit(":ask", "OK, what zip code or U.S. city and state would you like nearby aircraft for?", "For what zip code or U.S. city and state?");
-        }
+        mainAircraftHandler.call(this, zipCode, cityName, stateName, true);
+    },
+    "Location": function () {
+        const slots = this.event.request.intent.slots;
+        let zipCode: string = slots.ZipCode.value;
+        let cityName: string = slots.City.value;
+        let stateName: string = slots.State.value;
+        mainAircraftHandler.call(this, zipCode, cityName, stateName);
     },
     "AMAZON.HelpIntent": function () {
         this.emit(":ask", "Try asking for nearby flights or aircraft. You can also specify a zip code or U.S. city and state in the same request.", "Try asking for nearby flights.");
@@ -93,42 +109,7 @@ const getLocationHandlers = Alexa.CreateStateHandler(states.GETLOCATION, {
         let zipCode: string = slots.ZipCode.value;
         let cityName: string = slots.City.value;
         let stateName: string = slots.State.value;
-        if (zipCode) {
-            let foundCoords = usZips[zipCode];
-            let zipCodeDetails = zipcodes.lookup(zipCode);
-            if (foundCoords === undefined) {
-                this.emit(":ask", "Invalid zip code. Please try again.", "Please try again");
-            }
-            else {
-                let location: Location = {
-                    latitude: foundCoords.lat,
-                    longitude: foundCoords.lng,
-                    city: zipCodeDetails.city,
-                    state: zipCodeDetails.state
-                };
-                getNearestAircraft(this.emit, location);
-                this.handler.state = "";
-            }
-        }
-        else if (cityName && stateName) {
-            let cityDetails = zipcodes.lookupByName(cityName, stateName)[0];
-            if (cityDetails === undefined) {
-                this.emit(":ask", "Invalid city and state. Please try again.", "Please try again");
-            }
-            else {
-                let location: Location = {
-                    latitude: cityDetails.latitude,
-                    longitude: cityDetails.longitude,
-                    city: cityDetails.city,
-                    state: cityDetails.state
-                };
-                getNearestAircraft(this.emit, location);
-                this.handler.state = "";
-            }
-        }
-        else {
-            this.emit("Unhandled");
-        }
+        mainAircraftHandler.call(this, zipCode, cityName, stateName);
     },
     "AMAZON.HelpIntent": function () {
         this.emit(":ask", "Say a zip code or U.S. city and state.", "Say a zip code or U.S. city and state.");
