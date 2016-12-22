@@ -42,6 +42,7 @@ function mainAircraftHandler (zipCode: string | null, cityName: string | null, s
                 state: zipCodeDetails.state
             };
             getNearestAircraft(this.emit, location);
+            this.handler.state = "";
         }
     }
     else if (cityName && stateName) {
@@ -57,6 +58,7 @@ function mainAircraftHandler (zipCode: string | null, cityName: string | null, s
                 state: cityDetails.state
             };
             getNearestAircraft(this.emit, location);
+            this.handler.state = "";
         }
     }
     else {
@@ -104,6 +106,9 @@ const defaultSessionHanders = {
     }
 };
 const getLocationHandlers = Alexa.CreateStateHandler(states.GETLOCATION, {
+    "NearbyAircraft": function () {
+        this.emit("Location");
+    },
     "Location": function () {
         const slots = this.event.request.intent.slots;
         let zipCode: string = slots.ZipCode.value;
