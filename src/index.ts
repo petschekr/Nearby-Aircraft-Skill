@@ -46,6 +46,8 @@ function mainAircraftHandler (zipCode: string | null, cityName: string | null, s
         }
     }
     else if (cityName && stateName) {
+        if (cityName.toLowerCase() === "new york city")
+            cityName = "new york";
         let cityDetails = zipcodes.lookupByName(cityName, stateName)[0];
         if (cityDetails === undefined) {
             this.emit(":ask", "Invalid city and state. Please try again.", "Please try again");
