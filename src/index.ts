@@ -27,7 +27,96 @@ const states = {
     GETLOCATION: "_GETLOCATION"
 };
 
-function mainAircraftHandler (zipCode: string | null, cityName: string | null, stateName: string | null, shouldFollowUp: boolean = false) {
+function mainAircraftHandler (zipCode: string, cityName: string, stateName: string, shouldFollowUp: boolean = false) {
+    if (!cityName && stateName.toLowerCase() === "new york")
+        cityName = "new york";
+    if (!stateName) {
+        switch (cityName.toLowerCase()) {
+            case "new york":
+            case "new york city":
+                stateName = "NY";
+                break;
+            case "los angeles":
+            case "san diego":
+            case "san francisco":
+            case "san jose":
+                stateName = "CA";
+                break;
+            case "chicago":
+                stateName = "IL";
+                break;
+            case "houston":
+            case "san antonio":
+            case "dallas":
+            case "austin":
+            case "fort worth":
+            case "el paso":
+                stateName = "TX";
+                break;
+            case "philadelphia":
+                stateName = "PA";
+                break;
+            case "phoenix":
+                stateName = "AZ";
+                break;
+            case "jacksonville":
+            case "miami":
+            case "orlando":
+            case "fort lauderdale":
+            case "fort myers":
+            case "tampa":
+            case "tampa bay":
+                stateName = "FL";
+                break;
+            case "indianapolis":
+                stateName = "IN";
+                break;
+            case "columbus":
+                stateName = "OH";
+                break;
+            case "charlotte":
+                stateName = "NC";
+                break;
+            case "seattle":
+                stateName = "WA";
+                break;
+            case "denver":
+                stateName = "CO";
+                break;
+            case "boston":
+                stateName = "MA";
+                break;
+            case "memphis":
+            case "nashville":
+                stateName = "TN";
+                break;
+            case "portland":
+                stateName = "OR";
+                break;
+            case "las vegas":
+                stateName = "NV";
+                break;
+            case "baltimore":
+                stateName = "MD";
+                break;
+            case "atlanta":
+                stateName = "GA";
+                break;
+            case "minneapolis":
+                stateName = "MN";
+                break;
+            case "detroit":
+                stateName = "MI";
+                break;
+            case "salt lake city":
+                stateName = "UT";
+                break;
+            case "honolulu":
+                stateName = "HI";
+                break;
+        }
+    }
+
     if (zipCode) {
         let foundCoords = usZips[zipCode];
         let zipCodeDetails = zipcodes.lookup(zipCode);
@@ -61,6 +150,16 @@ function mainAircraftHandler (zipCode: string | null, cityName: string | null, s
             };
             getNearestAircraft(this.emit, location);
             this.handler.state = "";
+        }
+    }
+    else if (cityName && !stateName) {
+        if (shouldFollowUp) {
+            // Follow up with a request for a location
+            this.handler.state = states.GETLOCATION;
+            this.emit(":ask", "Sorry, please include the U.S. state when asking for a city.", "Please say a zip code or U.S. city and state.");
+        }
+        else {
+            this.emit("Unhandled");
         }
     }
     else {
@@ -104,7 +203,12 @@ const defaultSessionHanders = {
         this.emit(":tell", "OK");
     },
     "Unhandled": function () {
-        this.emit(":ask", "Sorry, I didn't get that. Try asking for nearby flights.", "Try asking for nearby flights.");
+        if (this.handler.state === states.GETLOCATION) {
+            this.emit(":ask", "Sorry, I didn't get that. Please say a zip code or U.S. city and state.", "Please say a zip code or U.S. city and state.");
+        }
+        else {
+            this.emit(":ask", "Sorry, I didn't get that. Try asking for nearby flights.", "Try asking for nearby flights.");
+        }
     }
 };
 const getLocationHandlers = Alexa.CreateStateHandler(states.GETLOCATION, {
@@ -126,9 +230,6 @@ const getLocationHandlers = Alexa.CreateStateHandler(states.GETLOCATION, {
     },
     "AMAZON.StopIntent": function () {
         this.emit(":tell", "OK");
-    },
-    "Unhandled": function () {
-        this.emit(":ask", "Sorry, I didn't get that. Please say a zip code or U.S. city and state.", "Please say a zip code or U.S. city and state.");
     }
 });
 
