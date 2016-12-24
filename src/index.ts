@@ -28,9 +28,9 @@ const states = {
 };
 
 function mainAircraftHandler (zipCode: string, cityName: string, stateName: string, shouldFollowUp: boolean = false) {
-    if (!cityName && stateName.toLowerCase() === "new york")
+    if (!cityName && stateName && stateName.toLowerCase() === "new york")
         cityName = "new york";
-    if (!stateName) {
+    if (!stateName && cityName) {
         switch (cityName.toLowerCase()) {
             case "new york":
             case "new york city":
