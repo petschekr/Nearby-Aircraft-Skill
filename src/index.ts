@@ -203,12 +203,7 @@ const defaultSessionHanders = {
         this.emit(":tell", "OK");
     },
     "Unhandled": function () {
-        if (this.handler.state === states.GETLOCATION) {
-            this.emit(":ask", "Sorry, I didn't get that. Please say a zip code or U.S. city and state.", "Please say a zip code or U.S. city and state.");
-        }
-        else {
-            this.emit(":ask", "Sorry, I didn't get that. Try asking for nearby flights.", "Try asking for nearby flights.");
-        }
+        this.emit(":ask", "Sorry, I didn't get that. Try asking for nearby flights.", "Try asking for nearby flights.");
     }
 };
 const getLocationHandlers = Alexa.CreateStateHandler(states.GETLOCATION, {
@@ -230,6 +225,9 @@ const getLocationHandlers = Alexa.CreateStateHandler(states.GETLOCATION, {
     },
     "AMAZON.StopIntent": function () {
         this.emit(":tell", "OK");
+    },
+    "Unhandled": function () {
+        this.emit(":ask", "Sorry, I didn't get that. Please say a zip code or U.S. city and state.", "Please say a zip code or U.S. city and state.");
     }
 });
 
