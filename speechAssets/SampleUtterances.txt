@@ -5,6 +5,9 @@ NearbyAircraft nearby planes
 NearbyAircraft aircraft
 NearbyAircraft flights
 NearbyAircraft planes
+NearbyAircraft aircraft in my area
+NearbyAircraft flights in my area
+NearbyAircraft planes in my area
 NearbyAircraft nearby aircraft at {ZipCode}
 NearbyAircraft nearby flights at {ZipCode}
 NearbyAircraft nearby planes at {ZipCode}
