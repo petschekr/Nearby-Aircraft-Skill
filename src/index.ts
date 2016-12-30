@@ -31,7 +31,16 @@ const states = {
 
 function emit(...params: string[]): void {
     let intent = this.event.request.intent;
-    VoiceInsights.track(intent.name, intent.slots, params.join(" | "), (error, response) => {
+    let trackName, trackSlots;
+    if (intent) {
+        trackName = intent.name;
+        trackSlots = intent.slots;
+    }
+    else {
+        trackName = this.event.request.type;
+        trackSlots = null;
+    }
+    VoiceInsights.track(trackName, trackSlots, params.join(" | "), (error, response) => {
         if (error) {
             console.warn("VoiceInsights error:", error);
         }
