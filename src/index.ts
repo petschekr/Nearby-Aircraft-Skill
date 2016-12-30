@@ -48,7 +48,7 @@ function emit(...params: string[]): void {
     });
 }
 
-function mainAircraftHandler (zipCode: string, cityName: string, stateName: string, shouldFollowUp: boolean = false) {
+function mainAircraftHandler (zipCode: string, cityName: string, stateName: string) {
     if (!cityName && stateName && stateName.toLowerCase() === "new york")
         cityName = "new york";
     if (!stateName && cityName) {
@@ -177,24 +177,14 @@ function mainAircraftHandler (zipCode: string, cityName: string, stateName: stri
         }
     }
     else if (cityName && !stateName) {
-        if (shouldFollowUp) {
-            // Follow up with a request for a location
-            this.handler.state = states.GETLOCATION;
-            this.emit(":ask", "Sorry, please include the U.S. state when asking for a city.", "Please say a zip code or U.S. city and state.");
-        }
-        else {
-            this.emit("Unhandled");
-        }
+        // Follow up with a request for a location
+        this.handler.state = states.GETLOCATION;
+        this.emit(":ask", "Sorry, please include the U.S. state when asking for a city.", "Please say a zip code or U.S. city and state.");
     }
     else {
-        if (shouldFollowUp) {
-            // Follow up with a request for a location
-            this.handler.state = states.GETLOCATION;
-            this.emit(":ask", "OK, what zip code or U.S. city and state would you like nearby aircraft for?", "For what zip code or U.S. city and state?");
-        }
-        else {
-            this.emit("Unhandled");
-        }
+        // Follow up with a request for a location
+        this.handler.state = states.GETLOCATION;
+        this.emit(":ask", "OK, what zip code or U.S. city and state would you like nearby aircraft for?", "For what zip code or U.S. city and state?");
     }
 }
 
@@ -212,7 +202,7 @@ const defaultSessionHanders = {
         let zipCode: string = slots.ZipCode.value;
         let cityName: string = slots.City.value;
         let stateName: string = slots.State.value;
-        mainAircraftHandler.call(this, zipCode, cityName, stateName, true);
+        mainAircraftHandler.call(this, zipCode, cityName, stateName);
     },
     "Location": function () {
         this.emitOriginal = this.emit;
