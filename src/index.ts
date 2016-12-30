@@ -75,6 +75,7 @@ function mainAircraftHandler (zipCode: string, cityName: string, stateName: stri
                 stateName = "TX";
                 break;
             case "philadelphia":
+            case "pittsburgh":
                 stateName = "PA";
                 break;
             case "phoenix":
@@ -93,6 +94,8 @@ function mainAircraftHandler (zipCode: string, cityName: string, stateName: stri
                 stateName = "IN";
                 break;
             case "columbus":
+            case "cincinnati":
+            case "cleveland":
                 stateName = "OH";
                 break;
             case "charlotte":
