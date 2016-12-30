@@ -350,7 +350,7 @@ function getNearestAircraft (emit: (...params: string[]) => void, location: Loca
         }
     });
     function articlizeCountry (country: string): string {
-        if (country === "United States" || country === "United Kingdom" || country === "Philippines" || country === "Netherlands" || country === "Czech Republic")
+        if (country === "United States" || country === "United Kingdom" || country === "Philippines" || country === "Netherlands" || country === "Kingdom of the Netherlands" || country === "Czech Republic")
             return "the " + country;
         else
             return country;
