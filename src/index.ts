@@ -5,6 +5,8 @@ const geolib: any = require("geolib");
 const usZips: any = require("us-zips");
 // For more zip code information
 const zipcodes: any = require("zipcodes");
+// Analytics
+const VoiceInsights: any = require("voice-insights-sdk");
 
 const APP_ID: string = "amzn1.ask.skill.d6f99fe1-708e-46a1-b88d-c965145e5d76";
 const DYNAMO_TABLE: string = "NearbyAircraftUsers";
@@ -26,6 +28,16 @@ interface Location {
 const states = {
     GETLOCATION: "_GETLOCATION"
 };
+
+function emit(...params: string[]): void {
+    let intent = this.event.request.intent;
+    VoiceInsights.track(intent.name, intent.slots, params.join(" | "), (error, response) => {
+        if (error) {
+            console.warn("VoiceInsights error:", error);
+        }
+        this.emitOriginal.apply(this, params);
+    });
+}
 
 function mainAircraftHandler (zipCode: string, cityName: string, stateName: string, shouldFollowUp: boolean = false) {
     if (!cityName && stateName && stateName.toLowerCase() === "new york")
@@ -176,10 +188,14 @@ function mainAircraftHandler (zipCode: string, cityName: string, stateName: stri
 
 const defaultSessionHanders = {
     "LaunchRequest": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         this.handler.state = states.GETLOCATION;
         this.emit(":ask", "What zip code or U.S. city and state would you like nearby aircraft for?", "For what zip code or U.S. city and state?");
     },
     "NearbyAircraft": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         const slots = this.event.request.intent.slots;
         let zipCode: string = slots.ZipCode.value;
         let cityName: string = slots.City.value;
@@ -187,6 +203,8 @@ const defaultSessionHanders = {
         mainAircraftHandler.call(this, zipCode, cityName, stateName, true);
     },
     "Location": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         const slots = this.event.request.intent.slots;
         let zipCode: string = slots.ZipCode.value;
         let cityName: string = slots.City.value;
@@ -194,15 +212,23 @@ const defaultSessionHanders = {
         mainAircraftHandler.call(this, zipCode, cityName, stateName);
     },
     "AMAZON.HelpIntent": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         this.emit(":ask", "Try asking for nearby flights or aircraft. You can also specify a zip code or U.S. city and state in the same request.", "Try asking for nearby flights.");
     },
     "AMAZON.CancelIntent": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         this.emit(":tell", "OK");
     },
     "AMAZON.StopIntent": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         this.emit(":tell", "OK");
     },
     "Unhandled": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         this.emit(":ask", "Sorry, I didn't get that. Try asking for nearby flights.", "Try asking for nearby flights.");
     }
 };
@@ -211,6 +237,8 @@ const getLocationHandlers = Alexa.CreateStateHandler(states.GETLOCATION, {
         this.emit("Location");
     },
     "Location": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         const slots = this.event.request.intent.slots;
         let zipCode: string = slots.ZipCode.value;
         let cityName: string = slots.City.value;
@@ -218,15 +246,23 @@ const getLocationHandlers = Alexa.CreateStateHandler(states.GETLOCATION, {
         mainAircraftHandler.call(this, zipCode, cityName, stateName);
     },
     "AMAZON.HelpIntent": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         this.emit(":ask", "Say a zip code or U.S. city and state.", "Say a zip code or U.S. city and state.");
     },
     "AMAZON.CancelIntent": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         this.emit(":tell", "OK");
     },
     "AMAZON.StopIntent": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         this.emit(":tell", "OK");
     },
     "Unhandled": function () {
+        this.emitOriginal = this.emit;
+        this.emit = emit.bind(this);
         this.emit(":ask", "Sorry, I didn't get that. Please say a zip code or U.S. city and state.", "Please say a zip code or U.S. city and state.");
     }
 });
@@ -348,6 +384,8 @@ function getNearestAircraft (emit: (...params: string[]) => void, location: Loca
 // Create the handler that responds to the Alexa Request.
 exports.handler = function (event, context, callback) {
     var alexa = Alexa.handler(event, context);
+    VoiceInsights.initialize(event.session, process.env.VITOKEN);
+
     alexa.appId = APP_ID;
     //alexa.dynamoDBTableName = DYNAMO_TABLE;
     alexa.registerHandlers(defaultSessionHanders, getLocationHandlers);

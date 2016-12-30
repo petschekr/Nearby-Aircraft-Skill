@@ -21,6 +21,7 @@
     "geolib": "^2.0.22",
     "request": "^2.79.0",
     "us-zips": "^1.0.0",
+    "voice-insights-sdk": "^1.2.2",
     "zipcodes": "^2.1.0"
   },
   "devDependencies": {
